@@ -26,6 +26,8 @@
 
 #define HXDARKVIEWWIDTH 30
 
+static CGFloat kBottomViewHeight = 155;
+
 @interface HXPhotoPreviewViewController ()
 <
 UICollectionViewDataSource,
@@ -375,11 +377,11 @@ HX_PhotoEditViewControllerDelegate
         });
     }
     
-    CGFloat bottomViewHeight = self.view.hx_h - 50 - bottomMargin;
+    CGFloat bottomViewHeight = self.view.hx_h - kBottomViewHeight - bottomMargin;
     if (self.outside) {
         if (self.exteriorPreviewStyle == HXPhotoViewPreViewShowStyleDefault) {
             self.navBar.frame = CGRectMake(0, 0, self.view.hx_w, hxNavigationBarHeight);
-            self.bottomView.frame = CGRectMake(0, bottomViewHeight, self.view.hx_w, 50 + bottomMargin);
+            self.bottomView.frame = CGRectMake(0, bottomViewHeight, self.view.hx_w, kBottomViewHeight + bottomMargin);
         }else if (self.exteriorPreviewStyle == HXPhotoViewPreViewShowStyleDark) {
             CGFloat topMargin = HX_IS_IPhoneX_All ? ((orientation == UIInterfaceOrientationLandscapeRight || orientation == UIInterfaceOrientationLandscapeLeft) ? 25 : 45) : 25;
             if (self.previewShowDeleteButton) {
@@ -390,7 +392,7 @@ HX_PhotoEditViewControllerDelegate
             self.bottomPageControl.frame = CGRectMake(0, pageControlY, self.view.hx_w, 10);
         }
     }else {
-        self.bottomView.frame = CGRectMake(0, bottomViewHeight, self.view.hx_w, 50 + bottomMargin);
+        self.bottomView.frame = CGRectMake(0, bottomViewHeight, self.view.hx_w, kBottomViewHeight + bottomMargin);
     }
     
     if (self.manager.configuration.previewBottomView) {
@@ -1580,9 +1582,9 @@ HX_PhotoEditViewControllerDelegate
 - (HXPhotoPreviewBottomView *)bottomView {
     if (!_bottomView) {
         if (self.outside) {
-            _bottomView = [[HXPhotoPreviewBottomView alloc] initWithFrame:CGRectMake(0, self.view.hx_h - 50 - hxBottomMargin, self.view.hx_w, 50 + hxBottomMargin) modelArray:self.manager.afterSelectedArray manager:self.manager];
+            _bottomView = [[HXPhotoPreviewBottomView alloc] initWithFrame:CGRectMake(0, self.view.hx_h - kBottomViewHeight - hxBottomMargin, self.view.hx_w, kBottomViewHeight + hxBottomMargin) modelArray:self.manager.afterSelectedArray manager:self.manager];
         }else {
-            _bottomView = [[HXPhotoPreviewBottomView alloc] initWithFrame:CGRectMake(0, self.view.hx_h - 50 - hxBottomMargin, self.view.hx_w, 50 + hxBottomMargin) modelArray:self.manager.selectedArray manager:self.manager];
+            _bottomView = [[HXPhotoPreviewBottomView alloc] initWithFrame:CGRectMake(0, self.view.hx_h - kBottomViewHeight - hxBottomMargin, self.view.hx_w, kBottomViewHeight + hxBottomMargin) modelArray:self.manager.selectedArray manager:self.manager];
         }
         _bottomView.delagate = self;
     }

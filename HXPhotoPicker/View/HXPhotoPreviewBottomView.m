@@ -211,42 +211,22 @@
 - (void)changeDoneBtnFrame {
     if (self.outside) {
         if (self.manager.afterSelectedPhotoArray.count && self.manager.afterSelectedVideoArray.count) {
-            if (!self.manager.configuration.videoCanEdit && !self.manager.configuration.photoCanEdit) {
-                if (self.collectionView.hx_w != self.hx_w - 12) self.collectionView.hx_w = self.hx_w - 12;
-            }else {
-                self.editBtn.hx_x = self.hx_w - 12 - self.editBtn.hx_w;
-                if (self.collectionView.hx_w != self.editBtn.hx_x) self.collectionView.hx_w = self.editBtn.hx_x;
+            if (self.manager.configuration.videoCanEdit || self.manager.configuration.photoCanEdit) {
+                self.editBtn.hx_x = 20;
             }
-        }else {
-            if (self.hideEditBtn) {
-                if (self.collectionView.hx_w != self.hx_w - 12) self.collectionView.hx_w = self.hx_w - 12;
-            }else {
-                self.editBtn.hx_x = self.hx_w - 12 - self.editBtn.hx_w;
-                if (self.collectionView.hx_w != self.editBtn.hx_x) self.collectionView.hx_w = self.editBtn.hx_x;
+        } else {
+            if (!self.hideEditBtn) {
+                self.editBtn.hx_x = 20;
             }
         }
-    }else {
-        
+    } else {
         CGFloat width = self.doneBtn.titleLabel.hx_getTextWidth;
         self.doneBtn.hx_w = width + 20;
         if (self.doneBtn.hx_w < 60) {
             self.doneBtn.hx_w = 60;
         }
         self.doneBtn.hx_x = self.hx_w - 12 - self.doneBtn.hx_w;
-        self.editBtn.hx_x = self.doneBtn.hx_x - self.editBtn.hx_w;
-        if (self.manager.type == HXPhotoManagerSelectedTypePhoto || self.manager.type == HXPhotoManagerSelectedTypeVideo) {
-            if (!self.hideEditBtn) {
-                if (self.collectionView.hx_w != self.editBtn.hx_x) self.collectionView.hx_w = self.editBtn.hx_x;
-            }else {
-                if (self.collectionView.hx_w != self.doneBtn.hx_x - 12) self.collectionView.hx_w = self.doneBtn.hx_x - 12;
-            }
-        }else {
-            if (!self.manager.configuration.videoCanEdit && !self.manager.configuration.photoCanEdit) {
-                if (self.collectionView.hx_w != self.doneBtn.hx_x - 12) self.collectionView.hx_w = self.doneBtn.hx_x - 12;
-            }else {
-                if (self.collectionView.hx_w != self.editBtn.hx_x) self.collectionView.hx_w = self.editBtn.hx_x;
-            }
-        }
+        self.editBtn.hx_x = 20;
     }
     self.tipView.frame = self.collectionView.frame;
     
@@ -256,9 +236,9 @@
     [super layoutSubviews];
     self.bgView.frame = self.bounds;
  
-    self.doneBtn.frame = CGRectMake(0, 0, 60, 30);
-    self.doneBtn.center = CGPointMake(self.doneBtn.center.x, 25);
-    
+    self.doneBtn.frame = CGRectMake(0, 110, 60, 30);
+    self.doneBtn.center = CGPointMake(self.doneBtn.center.x, 125);
+    self.editBtn.hx_centerY = self.doneBtn.hx_centerY;
     
     [self changeDoneBtnFrame];
 }
@@ -324,7 +304,7 @@
 }
 - (UICollectionView *)collectionView {
     if (!_collectionView) {
-        _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0,self.hx_w - 12 - 50, 50) collectionViewLayout:self.flowLayout];
+        _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(20, 14,self.hx_w - 40, 65) collectionViewLayout:self.flowLayout];
         _collectionView.backgroundColor = [UIColor clearColor];
         _collectionView.dataSource = self;
         _collectionView.delegate = self;
@@ -338,11 +318,11 @@
 - (UICollectionViewFlowLayout *)flowLayout {
     if (!_flowLayout) {
         _flowLayout = [[UICollectionViewFlowLayout alloc] init];
-        CGFloat itemWidth = 40;
-        _flowLayout.itemSize = CGSizeMake(itemWidth, 48);
-        _flowLayout.sectionInset = UIEdgeInsetsMake(1, 12, 1, 0);
-        _flowLayout.minimumInteritemSpacing = 1;
-        _flowLayout.minimumLineSpacing = 1;
+        CGFloat itemWidth = 65;
+        _flowLayout.itemSize = CGSizeMake(itemWidth, itemWidth);
+        _flowLayout.sectionInset = UIEdgeInsetsMake(1, 0, 1, 0);
+        _flowLayout.minimumInteritemSpacing = 10;
+        _flowLayout.minimumLineSpacing = 10;
         _flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     }
     return _flowLayout;
