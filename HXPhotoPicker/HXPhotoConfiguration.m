@@ -111,6 +111,7 @@
     }
     self.allowSlidingSelection = YES;
     self.livePhotoAutoPlay = YES;
+    self.photoListCanEdit = YES;
     
     self.photoListLimitBlurStyle = UIBlurEffectStyleLight;
     self.photoListLimitTextColor = [UIColor hx_colorWithHexStr:@"#666666"];

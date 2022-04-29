@@ -3312,14 +3312,18 @@ HX_PhotoEditViewControllerDelegate
     self.barTintColor = manager.configuration.bottomViewBgColor;
     self.bgView.barStyle = manager.configuration.bottomViewBarStyle;
     self.originalBtn.hidden = self.manager.configuration.hideOriginalBtn;
-    if (manager.type == HXPhotoManagerSelectedTypePhoto) {
-        self.editBtn.hidden = !manager.configuration.photoCanEdit;
-    }else if (manager.type == HXPhotoManagerSelectedTypeVideo) {
-        self.editBtn.hidden = !manager.configuration.videoCanEdit;
-    }else {
-        if (!manager.configuration.videoCanEdit && !manager.configuration.photoCanEdit) {
-            self.editBtn.hidden = YES;
+    if (manager.configuration.photoListCanEdit) {
+        if (manager.type == HXPhotoManagerSelectedTypePhoto) {
+            self.editBtn.hidden = !manager.configuration.photoCanEdit;
+        } else if (manager.type == HXPhotoManagerSelectedTypeVideo) {
+            self.editBtn.hidden = !manager.configuration.videoCanEdit;
+        } else {
+            if (!manager.configuration.videoCanEdit && !manager.configuration.photoCanEdit) {
+                self.editBtn.hidden = YES;
+            }
         }
+    } else {
+        self.editBtn.hidden = YES;
     }
     self.originalBtn.selected = self.manager.original;
     
@@ -3470,13 +3474,15 @@ HX_PhotoEditViewControllerDelegate
     self.doneBtn.hx_x = self.hx_w - 12 - self.doneBtn.hx_w;
 }
 - (void)updateOriginalBtnFrame {
-    if (self.editBtn.hidden) {
-        self.originalBtn.frame = CGRectMake(CGRectGetMaxX(self.previewBtn.frame) + 10, 0, 30, 50);
-        
-    }else {
-        self.originalBtn.frame = CGRectMake(CGRectGetMaxX(self.editBtn.frame) + 10, 0, 30, 50);
-    }
-    self.originalBtn.hx_w = self.originalBtn.titleLabel.hx_getTextWidth + 30;
+    //    if (self.editBtn.hidden) {
+    //        self.originalBtn.frame = CGRectMake(CGRectGetMaxX(self.previewBtn.frame) + 10, 0, 30, 50);
+    //    } else {
+    //        self.originalBtn.frame = CGRectMake(CGRectGetMaxX(self.editBtn.frame) + 10, 0, 30, 50);
+    //    }
+    //    self.originalBtn.hx_w = self.originalBtn.titleLabel.hx_getTextWidth + 30;
+    self.originalBtn.hx_centerX = self.hx_w / 2;
+    self.originalBtn.hx_y = 0;
+    self.originalBtn.hx_size = CGSizeMake(self.originalBtn.titleLabel.hx_getTextWidth + 30, 50);
     if (CGRectGetMaxX(self.originalBtn.frame) > self.doneBtn.hx_x - 25) {
         CGFloat w = self.doneBtn.hx_x - 5 - self.originalBtn.hx_x;
         self.originalBtn.hx_w = w < 0 ? 30 : w;

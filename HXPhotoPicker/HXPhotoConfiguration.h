@@ -266,6 +266,9 @@ HXPhotoPreviewViewController;
 /// 使用自己的相机时需要调用下面两个block
 @property (assign, nonatomic) BOOL replaceCameraViewController;
 
+/// 图片列表界面是否支持编辑，默认为YES
+@property (nonatomic, assign) BOOL photoListCanEdit;
+
 /**
  将要跳转相机界面 在block内实现跳转
  demo1 里有示例（使用的是系统相机）
