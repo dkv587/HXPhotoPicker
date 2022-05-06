@@ -269,6 +269,9 @@ HXPhotoPreviewViewController;
 /// 图片列表界面是否支持编辑，默认为YES
 @property (nonatomic, assign) BOOL photoListCanEdit;
 
+/// 选择器是否在点击完成后自动消失，默认为YES
+@property (nonatomic, assign) BOOL isAutoDismiss;
+
 /**
  将要跳转相机界面 在block内实现跳转
  demo1 里有示例（使用的是系统相机）
