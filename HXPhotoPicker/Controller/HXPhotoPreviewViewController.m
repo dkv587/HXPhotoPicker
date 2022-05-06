@@ -27,6 +27,7 @@
 #define HXDARKVIEWWIDTH 30
 
 static CGFloat kBottomViewHeight = 155;
+static CGFloat kNoPhotoBottomViewHeight = 55;
 
 @interface HXPhotoPreviewViewController ()
 <
@@ -377,11 +378,11 @@ HX_PhotoEditViewControllerDelegate
         });
     }
     
-    CGFloat bottomViewHeight = self.view.hx_h - kBottomViewHeight - bottomMargin;
+    CGFloat bottomViewHeight = self.view.hx_h - [self getBottomPreviewViewHeight] - bottomMargin;
     if (self.outside) {
         if (self.exteriorPreviewStyle == HXPhotoViewPreViewShowStyleDefault) {
             self.navBar.frame = CGRectMake(0, 0, self.view.hx_w, hxNavigationBarHeight);
-            self.bottomView.frame = CGRectMake(0, bottomViewHeight, self.view.hx_w, kBottomViewHeight + bottomMargin);
+            self.bottomView.frame = CGRectMake(0, bottomViewHeight, self.view.hx_w, [self getBottomPreviewViewHeight] + bottomMargin);
         }else if (self.exteriorPreviewStyle == HXPhotoViewPreViewShowStyleDark) {
             CGFloat topMargin = HX_IS_IPhoneX_All ? ((orientation == UIInterfaceOrientationLandscapeRight || orientation == UIInterfaceOrientationLandscapeLeft) ? 25 : 45) : 25;
             if (self.previewShowDeleteButton) {
@@ -392,7 +393,7 @@ HX_PhotoEditViewControllerDelegate
             self.bottomPageControl.frame = CGRectMake(0, pageControlY, self.view.hx_w, 10);
         }
     }else {
-        self.bottomView.frame = CGRectMake(0, bottomViewHeight, self.view.hx_w, kBottomViewHeight + bottomMargin);
+        self.bottomView.frame = CGRectMake(0, bottomViewHeight, self.view.hx_w, [self getBottomPreviewViewHeight] + bottomMargin);
     }
     
     if (self.manager.configuration.previewBottomView) {
@@ -650,10 +651,13 @@ HX_PhotoEditViewControllerDelegate
     if ([self.delegate respondsToSelector:@selector(photoPreviewControllerDidSelect:model:)]) {
         [self.delegate photoPreviewControllerDidSelect:self model:model];
     }
+    
     self.bottomView.selectCount = [self.manager selectedCount];
     if (button.selected) {
         [self.bottomView insertModel:model];
-    }else {
+        [self refreshBottomViewFrame];
+    } else {
+        [self refreshBottomViewFrame];
         [self.bottomView deleteModel:model];
     }
 }
@@ -1581,10 +1585,11 @@ HX_PhotoEditViewControllerDelegate
 }
 - (HXPhotoPreviewBottomView *)bottomView {
     if (!_bottomView) {
+        CGFloat bottomHeight = [self getBottomPreviewViewHeight];
         if (self.outside) {
-            _bottomView = [[HXPhotoPreviewBottomView alloc] initWithFrame:CGRectMake(0, self.view.hx_h - kBottomViewHeight - hxBottomMargin, self.view.hx_w, kBottomViewHeight + hxBottomMargin) modelArray:self.manager.afterSelectedArray manager:self.manager];
-        }else {
-            _bottomView = [[HXPhotoPreviewBottomView alloc] initWithFrame:CGRectMake(0, self.view.hx_h - kBottomViewHeight - hxBottomMargin, self.view.hx_w, kBottomViewHeight + hxBottomMargin) modelArray:self.manager.selectedArray manager:self.manager];
+            _bottomView = [[HXPhotoPreviewBottomView alloc] initWithFrame:CGRectMake(0, self.view.hx_h - bottomHeight - hxBottomMargin, self.view.hx_w, bottomHeight + hxBottomMargin) modelArray:self.manager.afterSelectedArray manager:self.manager];
+        } else {
+            _bottomView = [[HXPhotoPreviewBottomView alloc] initWithFrame:CGRectMake(0, self.view.hx_h - bottomHeight - hxBottomMargin, self.view.hx_w, bottomHeight + hxBottomMargin) modelArray:self.manager.selectedArray manager:self.manager];
         }
         _bottomView.delagate = self;
     }
@@ -1656,5 +1661,31 @@ HX_PhotoEditViewControllerDelegate
     }
     return _modelArray;
 }
+    
+#pragma mark - private bottom height
+- (CGFloat)getBottomPreviewViewHeight {
+    if (self.outside) {
+        return self.manager.afterSelectedArray.count ? kBottomViewHeight : kNoPhotoBottomViewHeight;
+    } else {
+        return self.manager.selectedArray.count ? kBottomViewHeight : kNoPhotoBottomViewHeight;
+    }
+}
+    
+- (void)refreshBottomViewFrame {
+    if (self.outside) {
+        if (self.manager.afterSelectedArray.count) {
+            self.bottomView.frame = CGRectMake(0, self.view.hx_h - kBottomViewHeight - hxBottomMargin, self.view.hx_w, kBottomViewHeight + hxBottomMargin);
+        } else {
+            self.bottomView.frame = CGRectMake(0, self.view.hx_h - kNoPhotoBottomViewHeight - hxBottomMargin, self.view.hx_w, kNoPhotoBottomViewHeight + hxBottomMargin);
+        }
+    } else {
+        if (self.manager.selectedArray.count) {
+            self.bottomView.frame = CGRectMake(0, self.view.hx_h - kBottomViewHeight - hxBottomMargin, self.view.hx_w, kBottomViewHeight + hxBottomMargin);
+        } else {
+            self.bottomView.frame = CGRectMake(0, self.view.hx_h - kNoPhotoBottomViewHeight - hxBottomMargin, self.view.hx_w, kNoPhotoBottomViewHeight + hxBottomMargin);
+        }
+    }
+}
+    
 @end
             

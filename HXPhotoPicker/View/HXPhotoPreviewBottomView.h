@@ -26,8 +26,6 @@
 @property (assign, nonatomic) BOOL enabled;
 @property (assign, nonatomic) BOOL outside;
 
-@property (strong, nonatomic) UIToolbar *tipView;
-@property (strong, nonatomic) UILabel *tipLb;
 - (void)changeTipViewState:(HXPhotoModel *)model;
 - (void)reloadData;
 - (void)insertModel:(HXPhotoModel *)model;

@@ -45,8 +45,6 @@
     self.barTintColor = manager.configuration.bottomViewBgColor;
     self.bgView.barStyle = manager.configuration.bottomViewBarStyle;
     self.bgView.translucent = manager.configuration.bottomViewTranslucent;
-    self.tipView.translucent = manager.configuration.bottomViewTranslucent;
-    self.tipView.barStyle = manager.configuration.bottomViewBarStyle;
 }
 - (void)setupUI {
     _currentIndex = -1;
@@ -54,7 +52,6 @@
     [self addSubview:self.collectionView];
     [self addSubview:self.doneBtn];
     [self addSubview:self.editBtn];
-    [self addSubview:self.tipView];
     [self changeDoneBtnFrame];
     [self changeColor];
 }
@@ -97,9 +94,9 @@
             tipText = [NSString stringWithFormat:[NSBundle hx_localizedStringForKey:@"视频少于%ld秒，无法选择"], self.manager.configuration.videoMinimumSelectDuration];
         }
     }
-    self.tipLb.text = tipText;
-    self.tipView.hidden = !tipText;
-    self.collectionView.hidden = tipText;
+    if (tipText) {
+        [self.hx_viewController.view hx_showImageHUDText:tipText];
+    }
 }
 - (void)reloadData {
     [self.collectionView reloadData];
@@ -228,17 +225,23 @@
         self.doneBtn.hx_x = self.hx_w - 12 - self.doneBtn.hx_w;
         self.editBtn.hx_x = 20;
     }
-    self.tipView.frame = self.collectionView.frame;
-    
-    self.tipLb.frame = CGRectMake(12, 0, self.tipView.hx_w - 12, self.tipView.hx_h);
 }
 - (void)layoutSubviews {
     [super layoutSubviews];
+    
     self.bgView.frame = self.bounds;
- 
-    self.doneBtn.frame = CGRectMake(0, 110, 60, 30);
-    self.doneBtn.center = CGPointMake(self.doneBtn.center.x, 125);
-    self.editBtn.hx_centerY = self.doneBtn.hx_centerY;
+    
+    if (self.modelArray.count) {
+        self.doneBtn.frame = CGRectMake(0, 110, 60, 30);
+        self.doneBtn.center = CGPointMake(self.doneBtn.center.x, 125);
+        self.editBtn.hx_centerY = self.doneBtn.hx_centerY;
+        self.collectionView.frame = CGRectMake(20, 14,self.hx_w - 40, 65);
+    } else {
+        self.doneBtn.frame = CGRectMake(0, 10, 60, 30);
+        self.doneBtn.center = CGPointMake(self.doneBtn.center.x, 25);
+        self.editBtn.hx_centerY = self.doneBtn.hx_centerY;
+        self.collectionView.frame = CGRectMake(20, 14,self.hx_w - 40, 65);
+    }
     
     [self changeDoneBtnFrame];
 }
@@ -249,7 +252,6 @@
         themeColor = [UIColor whiteColor];
         selectedTitleColor = [UIColor whiteColor];
         self.bgView.barTintColor = [UIColor blackColor];
-        self.tipView.barTintColor = [UIColor blackColor];
     }else {
         themeColor = self.manager.configuration.themeColor;
         if (self.manager.configuration.bottomDoneBtnTitleColor) {
@@ -258,9 +260,7 @@
             selectedTitleColor = self.manager.configuration.selectedTitleColor;
         }
         self.bgView.barTintColor = self.barTintColor;
-        self.tipView.barTintColor = self.barTintColor;
     }
-    _tipLb.textColor = themeColor;
     if ([themeColor isEqual:[UIColor whiteColor]]) {
         [_doneBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         [_doneBtn setTitleColor:[[UIColor blackColor] colorWithAlphaComponent:0.5] forState:UIControlStateDisabled];
@@ -284,23 +284,6 @@
         _bgView = [[UIToolbar alloc] init];
     }
     return _bgView;
-}
-- (UIToolbar *)tipView {
-    if (!_tipView) {
-        _tipView = [[UIToolbar alloc] init];
-        _tipView.hidden = YES;
-        [_tipView setShadowImage:[UIImage new] forToolbarPosition:UIBarPositionAny];
-        [_tipView addSubview:self.tipLb];
-    }
-    return _tipView;
-}
-- (UILabel *)tipLb {
-    if (!_tipLb) {
-        _tipLb = [[UILabel alloc] init];
-        _tipLb.numberOfLines = 0;
-        _tipLb.font = [UIFont systemFontOfSize:14];
-    }
-    return _tipLb;
 }
 - (UICollectionView *)collectionView {
     if (!_collectionView) {

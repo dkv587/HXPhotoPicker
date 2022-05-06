@@ -118,7 +118,6 @@
         _manager.configuration.previewBottomView = ^(HXPhotoPreviewBottomView *bottomView) {
             if (weakSelf.manager.configuration.photoStyle != HXPhotoStyleDark) {
                 bottomView.bgView.barTintColor = weakSelf.bottomViewBgColor;
-                bottomView.tipView.barTintColor = bottomView.bgView.barTintColor;
             }
         };
         _manager.configuration.albumListCollectionView = ^(UICollectionView *collectionView) {
